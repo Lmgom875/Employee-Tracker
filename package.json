@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Lmgom875/Employee-Tracker/issues"
   },
-  "homepage": "https://github.com/Lmgom875/Employee-Tracker#readme"
+  "homepage": "https://github.com/Lmgom875/Employee-Tracker#readme",
+  "dependencies": {
+    "mysql": "^2.18.1"
+  }
 }
