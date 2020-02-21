@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Lmgom875/Employee-Tracker#readme",
   "dependencies": {
+    "inquirer": "^7.0.4",
     "mysql": "^2.18.1"
   }
 }
