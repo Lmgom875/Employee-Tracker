@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/Lmgom875/Employee-Tracker#readme",
   "dependencies": {
+    "console-table-printer": "^1.1.61",
+    "console.table": "^0.10.0",
     "inquirer": "^7.0.4",
     "mysql": "^2.18.1"
   }
