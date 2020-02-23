@@ -58,6 +58,7 @@ const inic = () => {
                 updateInfo();
                 break;
             case "Exit app":
+                connection.end();
                 console.log("BYE :{");
                 break;
         }
@@ -116,7 +117,6 @@ const addNewEmployee = async () => {
     }])
     let insert = await connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("${answer.firstName}","${answer.lastName}","${answer.roleId}","${answer.managerId}")`)
     console.log(`New employee created ${answer.firstName} ${answer.lastName} with the ID ${insert.insertId}`);
-    connection.end();
     inic();
 }
 
@@ -139,7 +139,6 @@ const addNewRole = async () => {
     }])
     let insertRole = await connection.query(`INSERT INTO role (title, salary, department_id) VALUES ("${answer.newTitle}","${answer.salary}","${answer.deptName}")`)
     console.log(`New role created ${answer.newTitle} with the ID ${insertRole.insertId}`);
-    connection.end();
     inic();
 }
 
@@ -152,7 +151,6 @@ const addNewDepartment = async () => {
     })
     let insertDept = await connection.query(`INSERT INTO department (name) VALUES ("${answer.newDeptName}")`)
     console.log(`New department created ${answer.newDeptName} with the ID ${insertDept.insertId}`);
-    connection.end();
     inic();
 }
 
@@ -197,7 +195,6 @@ async function viewEmployees() {
     dbArray1 = await viewEmpInfoMap;
     const empTable = dbArray1;
     printTable(empTable);
-    connection.end();
     inic();
 }
 
@@ -208,7 +205,6 @@ async function viewRoles() {
     dbArray1 = await viewRoleInfoMap;
     const roleTable = dbArray1;
     printTable(roleTable);
-    connection.end();
     inic();
 }
 
@@ -219,7 +215,6 @@ async function viewDepartments() {
     dbArray1 = await viewDeptInfoMap;
     const deptTable = dbArray1;
     printTable(deptTable);
-    connection.end();
     inic();
 }
 
@@ -234,7 +229,6 @@ async function viewManagers() {
     dbArray1 = await viewManagerInfo;
     const mgrTable = dbArray1;
     printTable(mgrTable);
-    connection.end();
     inic();
 }
 
@@ -245,7 +239,6 @@ async function viewALL() {
     dbArray1 = await viewAllInfoMap;
     const allTable = dbArray1;
     printTable(allTable);
-    connection.end();
     inic();
 }
 
@@ -333,8 +326,7 @@ function updateFirstName(empNum, ) {
         connection.query(query, function (err, res) {
             if (err) throw err;
             console.log(`Update done`);
-            connection.end();
-            console.log("BYE :{");
+            inic();
         })
     })
 }
@@ -352,8 +344,7 @@ function updateLastName(empNum) {
         connection.query(query, function (err, res) {
             if (err) throw err;
             console.log(`Update done`);
-            connection.end();
-            console.log("BYE :{");
+            inic();
         })
     })
 }
@@ -372,8 +363,7 @@ const updateEmpRole = async (empNum) => {
     let query = `UPDATE employee SET role_id = "${newRole}" WHERE id = ${empNumToUpdate}`
     let updateRole = await connection.query(query)
     console.log(`Role updated`);
-    connection.end();
-    console.log("BYE :{");
+    inic();
 }
 
 //! Update employee manager
@@ -390,8 +380,7 @@ const updateEmpManager = async (empNum) => {
     let query = `UPDATE employee SET manager_id = "${newManager}" WHERE id = ${empNumToUpdate}`
     let updateRole = await connection.query(query)
     console.log(`Manager updated`);
-    connection.end();
-    console.log("BYE :{");
+    inic();
 }
 
 //! Update roles
@@ -412,8 +401,7 @@ const updateRoles = async () => {
     let query = `UPDATE role SET title = "${newRole}" WHERE id = ${oldRole}`
     let updateRole = await connection.query(query)
     console.log(`Role updated`);
-    connection.end();
-    console.log("BYE :{");
+    inic();
 }
 
 //! Update departments
@@ -434,8 +422,7 @@ const updateDepartments = async () => {
     let query = `UPDATE department SET name = "${newDept}" WHERE id = ${oldDept}`
     let updateDept = await connection.query(query)
     console.log(`Department updated`);
-    connection.end();
-    console.log("BYE :{");
+    inic();
 }
 
 inic();
