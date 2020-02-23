@@ -33,7 +33,6 @@ async function departmentChoices() {
     return deptMap;
 }
 
-
 //! APP start here
 const inic = () => {
     inquirer.prompt({
@@ -64,7 +63,6 @@ const inic = () => {
         }
     })
 }
-
 
 //! Adds functions start here
 const addNew = () => {
@@ -269,118 +267,42 @@ const updateInfo = () => {
 }
 
 //! Update employees functions
-//TODO How change that to async/await function?
-function updateEmployee() {
-    let query = "SELECT id, CONCAT(first_name, ' ', last_name) AS Employee FROM employee";
-    connection.query(query, function (err, results) {
-        if (err) throw err;
-        inquirer.prompt([{
-            name: "empName",
-            type: "rawlist",
-            message: "What employee do you want to update?",
-            choices: function () {
-                for (i = 0; i < results.length; i++) {
-                    dbArray1.push({ name: results[i].Employee, value: results[i].id })
-                }
-                return dbArray1;
-            }
-        }, {
-            name: "empArrbt",
-            type: "rawlist",
-            message: `What do you want to update`,
-            choices: [
-                "First name",
-                "Last name",
-                "Role",
-                "Manager"
-            ]
-        }]).then(function (answer) {
-            switch (answer.empArrbt) {
-                case 'First name':
-                    updateFirstName(answer.empName);
-                    break;
-                case "Last name":
-                    updateLastName(answer.empName);
-                    break
-                case "Role":
-                    updateEmpRole(answer.empName);
-                    break;
-                case "Manager":
-                    updateEmpManager(answer.empName);
-                    break;
-            }
-        })
-    })
-}
 
-//! Update employee first name
-function updateFirstName(empNum, ) {
-    inquirer.prompt({
-        name: "newFirstName",
-        type: "input",
-        message: `What is the new name`,
-    }).then(function (answer) {
-        let empNewName = answer.newFirstName;
-        let empNumToUpdate = empNum;
-        const query = `UPDATE employee SET first_name = "${empNewName}" WHERE id = ${empNumToUpdate}`
-        connection.query(query, function (err, res) {
-            if (err) throw err;
-            console.log(`Update done`);
-            inic();
-        })
+const updateEmployee = async () => {
+    dbArray2 = await employeeChoices();
+    let empChoise = await inquirer.prompt({
+        name: "empOldName",
+        type: "list",
+        message: "What employee do you want to update?",
+        choices: dbArray2
     })
-}
-
-//! Update employee last name
-function updateLastName(empNum) {
-    inquirer.prompt({
-        name: "newLastName",
-        type: "input",
-        message: `What is the new last name`,
-    }).then(function (answer) {
-        let empNewLastName = answer.newLastName;
-        let empNumToUpdate = empNum;
-        const query = `UPDATE employee SET last_name = "${empNewLastName}" WHERE id = ${empNumToUpdate}`
-        connection.query(query, function (err, res) {
-            if (err) throw err;
-            console.log(`Update done`);
-            inic();
-        })
-    })
-}
-
-//! Update employee role
-const updateEmpRole = async (empNum) => {
     dbArray1 = await rolesChoices();
-    let answer = await inquirer.prompt({
-        name: "empRole",
-        type: "list",
-        message: "What is the new role?",
-        choices: dbArray1,
+    dbArray2 = await employeeChoices();
+    let answer = await inquirer.prompt([{
+        name: "firstName",
+        type: "input",
+        message: "Employee first name?"
+    }, {
+        name: "lastName",
+        type: "input",
+        message: "Employee last name?",
+    }, {
+        name: "roleId",
+        type: "rawlist",
+        message: "Employee role?",
+        choices: dbArray1
+    }, {
+        name: "managerId",
+        type: "rawlist",
+        message: "What is the manager name?",
+        choices: dbArray2
+    }])
+    const query = `UPDATE employee SET first_name = "${answer.firstName}", last_name = "${answer.lastName}", role_id = "${answer.roleId}", manager_id = "${answer.managerId}" WHERE id = ${empChoise.empOldName}`
+    let insert = await connection.query(query, function (err, res) {
+        if (err) throw err;
+        console.log(`Employee updated`);
+        inic();
     })
-    let newRole = answer.empRole;
-    let empNumToUpdate = empNum;
-    let query = `UPDATE employee SET role_id = "${newRole}" WHERE id = ${empNumToUpdate}`
-    let updateRole = await connection.query(query)
-    console.log(`Role updated`);
-    inic();
-}
-
-//! Update employee manager
-const updateEmpManager = async (empNum) => {
-    dbArray1 = await employeeChoices();
-    let answer = await inquirer.prompt({
-        name: "empManager",
-        type: "list",
-        message: "What is the new manager?",
-        choices: dbArray1,
-    })
-    let newManager = answer.empManager;
-    let empNumToUpdate = empNum;
-    let query = `UPDATE employee SET manager_id = "${newManager}" WHERE id = ${empNumToUpdate}`
-    let updateRole = await connection.query(query)
-    console.log(`Manager updated`);
-    inic();
 }
 
 //! Update roles
@@ -396,9 +318,7 @@ const updateRoles = async () => {
         type: "input",
         message: "What is the new title for the role?",
     }])
-    let oldRole = answer.oldRole;
-    let newRole = answer.newRole;
-    let query = `UPDATE role SET title = "${newRole}" WHERE id = ${oldRole}`
+    let query = `UPDATE role SET title = "${answer.newRole}" WHERE id = ${answer.oldRole}`
     let updateRole = await connection.query(query)
     console.log(`Role updated`);
     inic();
@@ -417,9 +337,7 @@ const updateDepartments = async () => {
         type: "input",
         message: "What is the new name for the department?",
     }])
-    let oldDept = answer.oldDept;
-    let newDept = answer.newDept;
-    let query = `UPDATE department SET name = "${newDept}" WHERE id = ${oldDept}`
+    let query = `UPDATE department SET name = "${answer.newDept}" WHERE id = ${answer.oldDept}`
     let updateDept = await connection.query(query)
     console.log(`Department updated`);
     inic();
